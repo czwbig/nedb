@@ -16,6 +16,7 @@ results
 npm-debug.log
 workspace
 node_modules
+package-lock.json
 
 browser-version/src
 browser-version/node_modules
