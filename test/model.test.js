@@ -567,6 +567,57 @@ describe('Model', function () {
       })
     }) // End of '$push modifier'
 
+    describe('$pushAll modifier', function () {
+      it('Can pushAll an array element to the end of an array', function () {
+        const obj = { arr: ['hello'] }
+
+        const modified = model.modify(obj, { $pushAll: { arr: ['world', 'yep'] } })
+        assert.deepStrictEqual(modified, { arr: ['hello', 'world', 'yep'] })
+      })
+
+      it('Can pushAll an array element to a non-existent field and will create the array', function () {
+        const obj = {}
+
+        const modified = model.modify(obj, { $pushAll: { arr: ['world'] } })
+        assert.deepStrictEqual(modified, { arr: ['world'] })
+      })
+
+      it('Can pushAll on nested fields', function () {
+        let obj = { arr: { nested: ['hello'] } }
+        let modified
+
+        modified = model.modify(obj, { $pushAll: { 'arr.nested': ['world', 'yep'] } })
+        assert.deepStrictEqual(modified, { arr: { nested: ['hello', 'world', 'yep'] } })
+
+        obj = { arr: { a: 2 } }
+        modified = model.modify(obj, { $pushAll: { 'arr.nested': ['world', 'yep'] } })
+        assert.deepStrictEqual(modified, { arr: { a: 2, nested: ['world', 'yep'] } })
+      })
+
+      it('Throw if we try to pushAll to a non-array or pushAll a non-array element', function () {
+        let obj = { arr: 'hello' };
+
+        (function () {
+          model.modify(obj, { $pushAll: { arr: 'world' } })
+        }).should.throw()
+
+        obj = { arr: ['hello'] };
+        (function () {
+          model.modify(obj, { $pushAll: { arr: 'world' } })
+        }).should.throw()
+
+        obj = { arr: { nested: 45 } };
+        (function () {
+          model.modify(obj, { $pushAll: { 'arr.nested': 'world' } })
+        }).should.throw()
+
+        obj = { arr: { nested: [45] } };
+        (function () {
+          model.modify(obj, { $pushAll: { 'arr.nested': 'world' } })
+        }).should.throw()
+      })
+    }) // End of '$pushAll modifier'
+
     describe('$addToSet modifier', function () {
       it('Can add an element to a set', function () {
         let obj = { arr: ['hello'] }
@@ -716,6 +767,63 @@ describe('Model', function () {
         assert.deepStrictEqual(modified, { arr: [{ b: 4 }, { b: 1 }], other: 'yeah' })
       })
     }) // End of '$pull modifier'
+
+    describe('$pullAll modifier', function () {
+      it('Can remove an array element from a set', function () {
+        let obj = { arr: ['hello', 'world', 'yep'] }
+        let modified
+
+        modified = model.modify(obj, { $pullAll: { arr: ['world', 'yep'] } })
+        assert.deepStrictEqual(modified, { arr: ['hello'] })
+
+        obj = { arr: ['hello'] }
+        modified = model.modify(obj, { $pullAll: { arr: ['world'] } })
+        assert.deepStrictEqual(modified, { arr: ['hello'] })
+      })
+
+      it('Can remove multiple matching elements', function () {
+        const obj = { arr: ['hello', 'world', 'hello', 'world', 'yep'] }
+
+        const modified = model.modify(obj, { $pullAll: { arr: ['world', 'yep'] } })
+        assert.deepStrictEqual(modified, { arr: ['hello', 'hello'] })
+      })
+
+      it('Throw if we try to pullAll from a non-array or pullAll a non-array element', function () {
+        let obj = { arr: 'hello' };
+
+        (function () {
+          model.modify(obj, { $pullAll: { arr: 'world' } })
+        }).should.throw()
+        obj = { arr: ['hello'] };
+        (function () {
+          model.modify(obj, { $pullAll: { arr: 'world' } })
+        }).should.throw()
+      })
+
+      it('Use deep-equality to check whether we can remove values from a set', function () {
+        let obj = { arr: [{ b: 2 }, { b: 3 }, { b: 4 }] }
+        let modified
+
+        modified = model.modify(obj, { $pullAll: { arr: [{ b: 3 }, { b: 4 }] } })
+        assert.deepStrictEqual(modified, { arr: [{ b: 2 }] })
+
+        obj = { arr: [{ b: 2 }] }
+        modified = model.modify(obj, { $pullAll: { arr: [{ b: 3 }] } })
+        assert.deepStrictEqual(modified, { arr: [{ b: 2 }] })
+      })
+
+      it('Can not use any kind of nedb query with $pullAll', function () {
+        let obj = { arr: [4, 7, 12, 2], other: 'yup' };
+        (function () {
+          model.modify(obj, { $pullAll: { arr: { $gte: 5 } } })
+        }).should.throw()
+
+        obj = { arr: [{ b: 4 }, { b: 7 }, { b: 1 }], other: 'yeah' };
+        (function () {
+          model.modify(obj, { $pullAll: { arr: { b: { $gte: 5 } } } })
+        }).should.throw()
+      })
+    }) // End of '$pullAll modifier'
 
     describe('$max modifier', function () {
       it('Will set the field to the updated value if value is greater than current one, without modifying the original object', function () {
