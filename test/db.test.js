@@ -1102,6 +1102,26 @@ describe('Database', function () {
       })
     })
   })
+  describe('Distinct', async function () {
+    it('Distinct all documents if an empty query is used', function (done) {
+      // eslint-disable-next-line node/handle-callback-err
+      d.insert([
+        { somedata: 'ok' },
+        { somedata: 'ok' },
+        { somedata: 'another', plus: 'additional data' },
+        { somedata: 'again' },
+        { somedata: null },
+        { somedata: undefined }], function (err) {
+        assert.isNull(err)
+        d.distinct('somedata', {}, {}, function (err, docs) {
+          assert.isNull(err)
+          docs.should.have.lengthOf(4)
+          docs.should.have.all.members(['ok', 'another', 'again', null])
+          return done()
+        })
+      })
+    })
+  })
 
   describe('Update', function () {
     it('If the query doesn\'t match anything, database is not modified', function (done) {
