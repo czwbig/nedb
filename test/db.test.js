@@ -1919,7 +1919,7 @@ describe('Database', function () {
           })
         },
         function (cb) { // Test with query that doesn't match anything
-          d.remove({ somedata: 'again' }, { multi: true }, function (err, n) {
+          d.deleteMany({ somedata: 'again' }, {}, function (err, n) {
             assert.isNull(err)
             n.should.equal(2)
             return cb()
@@ -2057,9 +2057,9 @@ describe('Database', function () {
               nr.should.equal(1)
               // eslint-disable-next-line node/handle-callback-err
               d.find({}, function (err, docs) {
-                const d1 = docs.find(function (doc) { return doc._id === doc1._id })
-                const d2 = docs.find(function (doc) { return doc._id === doc2._id })
-                const d3 = docs.find(function (doc) { return doc._id === doc3._id })
+                const d1 = docs.find(doc => doc._id === doc1._id)
+                const d2 = docs.find(doc => doc._id === doc2._id)
+                const d3 = docs.find(doc => doc._id === doc3._id)
 
                 d1.a.should.equal(1)
                 assert.isUndefined(d2)
