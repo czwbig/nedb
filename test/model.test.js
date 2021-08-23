@@ -326,6 +326,8 @@ describe('Model', function () {
       }).to.throw(/Modifier .set's argument must be an object/)
     })
 
+    // TODO: need to add  test for modify array match element, by $ symbol
+
     describe('$set modifier', function () {
       it('Can change already set fields without modfifying the underlying object', function () {
         const obj = { some: 'thing', yup: 'yes', nay: 'noes' }
