@@ -889,26 +889,40 @@ describe('Cursor', function () {
         name,
         likes: [{
           title: 'title1',
-          contents: [{ text: 'text1', id: 1, size: 10 }, { text: 'text2', id: 2, size: 20 }]
+          contents: [{ text: 'text1', id: 1, size: 10, array: [{ nestedArray: [], info: 'nested1' }] }, {
+            text: 'text2',
+            id: 2,
+            size: 20,
+            array: [{ nestedArray: [], info: 'nested2' }]
+          }]
         }, {
           title: 'title2',
-          contents: [{ text: 'text2', id: 3, size: 30 }, { text: 'text2', id: 4, size: 40 }]
+          contents: [{ text: 'text2', id: 3, size: 30, array: [{ info: 'nested3' }] }, { text: 'text2', id: 4, size: 40 }]
         }]
         // eslint-disable-next-line node/handle-callback-err
       }, function (err, _doc5) {
       })
       const cursor = new Cursor(d, { name })
       cursor.sort({ age: 1 }) // For easier finding
-      cursor.projection({ name: 1, 'likes.contents.text': 1, 'likes.contents.size': 1, _id: 0 })
+      cursor.projection({
+        name: 1,
+        'likes.contents.text': 1,
+        'likes.contents.size': 1,
+        'likes.contents.array.nestedArray': 1,
+        'likes.contents.array.info': 1,
+        _id: 0
+      })
       // eslint-disable-next-line node/handle-callback-err
       cursor.exec(function (err, docs) {
         assert.deepStrictEqual(docs[0], {
           name,
           likes: [{
-            contents: [{ text: 'text1', size: 10 }, { text: 'text2', size: 20 }]
+            contents: [{ text: 'text1', size: 10, array: [{ nestedArray: [], info: 'nested1' }] },
+              { text: 'text2', size: 20, array: [{ nestedArray: [], info: 'nested2' }] }]
           }, {
-            contents: [{ text: 'text2', size: 30 }, { text: 'text2', size: 40 }]
-          }]
+            contents: [{ text: 'text2', size: 30, array: [{ info: 'nested3' }] }, { text: 'text2', size: 40 }]
+          }
+          ]
         })
 
         done()
