@@ -1611,8 +1611,8 @@ describe('Model', function () {
 
     describe('Comparison operator $where', function () {
       it('Function should match and not match correctly', function () {
-        model.match({ a: 4 }, { $where: function () { return this.a === 4 } }).should.equal(true)
-        model.match({ a: 4 }, { $where: function () { return this.a === 5 } }).should.equal(false)
+        model.match({ a: 4 }, { $where () { return this.a === 4 } }).should.equal(true)
+        model.match({ a: 4 }, { $where () { return this.a === 5 } }).should.equal(false)
       })
 
       it('Should throw an error if the $where function is not, in fact, a function', function () {
@@ -1620,7 +1620,7 @@ describe('Model', function () {
       })
 
       it('Should throw an error if the $where function returns a non-boolean', function () {
-        (function () { model.match({ a: 4 }, { $where: function () { return 'not a boolean' } }) }).should.throw()
+        (function () { model.match({ a: 4 }, { $where () { return 'not a boolean' } }) }).should.throw()
       })
 
       it('Should be able to do the complex matching it must be used for', function () {

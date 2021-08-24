@@ -38,7 +38,7 @@ module.exports.getConfiguration = function (benchDb) {
     inMemoryOnly: program.inMemory
   })
 
-  return { n: n, d: d, program: program }
+  return { n, d, program }
 }
 
 /**

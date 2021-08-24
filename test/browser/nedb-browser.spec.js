@@ -311,7 +311,7 @@ describe("Don't forget to launch persistence tests!", function () {
   const filename = 'test'
 
   before('Clean & write', function (done) {
-    const db = new Nedb({ filename: filename, autoload: true })
+    const db = new Nedb({ filename, autoload: true })
     db.remove({}, { multi: true }, function () {
       db.insert({ hello: 'world' }, function (err) {
         assert.isNull(err)
@@ -321,7 +321,7 @@ describe("Don't forget to launch persistence tests!", function () {
   })
 
   it('Read & check', function (done) {
-    const db = new Nedb({ filename: filename, autoload: true })
+    const db = new Nedb({ filename, autoload: true })
     db.find({}, (err, docs) => {
       assert.isNull(err)
       if (docs.length !== 1) {

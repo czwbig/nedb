@@ -198,7 +198,7 @@ describe('Cursor', function () {
       const db = new Datastore({
         inMemoryOnly: true,
         autoload: true,
-        compareStrings: function (a, b) { return a.length - b.length }
+        compareStrings (a, b) { return a.length - b.length }
       })
 
       db.insert({ name: 'alpha' })

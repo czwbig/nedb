@@ -89,7 +89,7 @@ describe('Database', function () {
         done()
       }
 
-      const db = new Datastore({ filename: autoDb, autoload: true, onload: onload })
+      const db = new Datastore({ filename: autoDb, autoload: true, onload })
 
       // eslint-disable-next-line node/handle-callback-err
       db.find({}, function (err, docs) {
@@ -1945,7 +1945,7 @@ describe('Database', function () {
               // Remove two docs simultaneously
               const toRemove = ['Mars', 'Saturn']
               async.each(toRemove, function (planet, cb) {
-                d.remove({ planet: planet }, function (err) { return cb(err) })
+                d.remove({ planet }, function (err) { return cb(err) })
                 // eslint-disable-next-line node/handle-callback-err
               }, function (err) {
                 // eslint-disable-next-line node/handle-callback-err

@@ -342,7 +342,7 @@ describe('Persistence', function () {
             filename: hookTestFilename,
             autoload: true,
             afterSerialization: as,
-            beforeDeserialization: function (s) { return s }
+            beforeDeserialization (s) { return s }
           })
         }).should.throw()
 
