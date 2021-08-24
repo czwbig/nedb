@@ -795,7 +795,7 @@ violated). `ensureIndex` can be called when you want, even after some data was
 inserted, though it's best to call it at application startup. The options are:
 
 * **fieldName** (required): name of the field to index. Use the dot notation to
-  index a field in a nested document.
+  index a field in a nested document. For a compound index, use an array of field names.
 * **unique** (optional, defaults to `false`): enforce field uniqueness. Note
   that a unique index will raise an error if you try to index two documents for
   which the field is not defined.
