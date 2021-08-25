@@ -8,16 +8,18 @@ written by Louis Chatriot.
 Since the original maintainer doesn't support this package anymore, we forked it
 and maintain it for the needs of [Seald](https://www.seald.io).
 
+2021-08: Add mongoose support and rename to nedb-for-mongoose. [nedb-mongoose-driver](https://github.com/czwbig/nedb-mongoose-driver)
+
 **Embedded persistent or in memory database for Node.js, nw.js, Electron and
 browsers, 100% JavaScript, no binary dependency**. API is a subset of MongoDB's
 and it's [plenty fast](#speed).
 
 ## Installation, tests
 
-Module name on npm is `@seald-io/nedb`.
+Module name on npm is `nedb-for-mongoose`.
 
 ```
-npm install @seald-io/nedb
+npm install nedb-for-mongoose
 ```
 
 ## API
@@ -108,24 +110,24 @@ sequence, only after a successful `loadDatabase`.
 
 ```javascript
 // Type 1: In-memory only datastore (no need to load the database)
-const Datastore = require('@seald-io/nedb')
+const Datastore = require('nedb-for-mongoose')
 const db = new Datastore()
 
 // Type 2: Persistent datastore with manual loading
-const Datastore = require('@seald-io/nedb')
+const Datastore = require('nedb-for-mongoose')
 const db = new Datastore({ filename: 'path/to/datafile' })
 db.loadDatabase(function (err) {    // Callback is optional
   // Now commands will be executed
 })
 
 // Type 3: Persistent datastore with automatic loading
-const Datastore = require('@seald-io/nedb')
+const Datastore = require('nedb-for-mongoose')
 const db = new Datastore({ filename: 'path/to/datafile', autoload: true });
 // You can issue commands right away
 
 // Type 4: Persistent datastore for a Node Webkit app called 'nwtest'
 // For example on Linux, the datafile will be ~/.config/nwtest/nedb-data/something.db
-const Datastore = require('@seald-io/nedb')
+const Datastore = require('nedb-for-mongoose')
 const path = require('path')
 const db = new Datastore({ filename: path.join(require('nw.gui').App.dataPath, 'something.db') });
 
@@ -199,7 +201,7 @@ var doc = {
   notthere: null,
   notToBeSaved: undefined,  // Will not be saved
   fruits: ['apple', 'orange', 'pear'],
-  infos: { name: '@seald-io/nedb' }
+  infos: { name: 'nedb-for-mongoose' }
 }
 
 db.insert(doc, function (err, newDoc) {   // Callback is optional
@@ -837,9 +839,9 @@ db.ensureIndex({
 });
 
 // Format of the error message when the unique constraint is not met
-db.insert({ somefield: '@seald-io/nedb' }, function (err) {
+db.insert({ somefield: 'nedb-for-mongoose' }, function (err) {
   // err is null
-  db.insert({ somefield: '@seald-io/nedb' }, function (err) {
+  db.insert({ somefield: 'nedb-for-mongoose' }, function (err) {
     // err is { errorType: 'uniqueViolated'
     //        , key: 'name'
     //        , message: 'Unique constraint violated for key name' }
