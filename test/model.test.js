@@ -1273,14 +1273,14 @@ describe('Model', function () {
         model.match({ test: 'true' }, { test: { $regex: /t[ru]e/ } }).should.equal(false)
       })
 
-      it('Will throw if $regex operator is used with a non regex value', function () {
+      it('Will throw if $regex operator is used with a non regex value or string', function () {
         (function () {
           model.match({ test: 'true' }, { test: { $regex: 42 } })
         }).should.throw();
 
         (function () {
           model.match({ test: 'true' }, { test: { $regex: 'true' } })
-        }).should.throw()
+        }).should.not.throw()
       })
 
       it('Can use the $regex operator in cunjunction with other operators', function () {
