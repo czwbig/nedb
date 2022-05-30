@@ -763,6 +763,51 @@ describe('Database', function () {
       ], done)
     })
 
+    it('Can find field eq null and field not exists documents matching a field eq null query with sparse index', function (done) {
+      async.waterfall([
+        function (cb) {
+          // eslint-disable-next-line node/handle-callback-err
+          d.insertMany([{ a: 1, testnull: null }, { a: 2 }], function (err, docs) {
+            docs.length.should.equal(2)
+            assert.isNull(err)
+            return cb()
+          })
+        },
+        function (cb) { // Test with query that will return docs
+          d.find({ testnull: null }, function (err, docs) {
+            assert.isNull(err)
+            docs.length.should.equal(2)
+            return cb()
+          })
+        },
+        function (cb) { // Test with query that will return docs
+          d.find({ testnull: { $exists: false } }, function (err, docs) {
+            assert.isNull(err)
+            docs.length.should.equal(1)
+            return cb()
+          })
+        },
+        function (cb) { // Test with query that doesn't match anything
+          d.find({ testnull: undefined }, function (err, docs) {
+            assert.isNull(err)
+            docs.length.should.equal(0)
+            return cb()
+          })
+        },
+        function (cb) { // Test with query that match exists=false and eq null
+          d.ensureIndex({ fieldName: 'testnull', sparse: true }, function (err1) {
+            assert.isNull(err1)
+            d.find({ testnull: null }, function (err, docs) {
+              assert.isNull(err)
+              docs.length.should.equal(2)
+              return cb()
+            })
+          })
+        }
+
+      ], done)
+    })
+
     it('Can find one document matching a basic query and return null if none is found', function (done) {
       async.waterfall([
         function (cb) {
