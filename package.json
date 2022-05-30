@@ -1,6 +1,6 @@
 {
   "name": "nedb-for-mongoose",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "files": [
     "lib/**/*.js",
     "browser-version/**/*.js",
